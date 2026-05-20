@@ -2,7 +2,7 @@ name: Daily TIL Auto-Update
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # 23:00 WIB (UTC+7)
+    - cron: '0 2 * * *'  # 09:00 WIB (UTC+7)
   workflow_dispatch:       # bisa trigger manual juga
 
 permissions:
