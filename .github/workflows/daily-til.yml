@@ -1,0 +1,90 @@
+name: Daily TIL Auto-Update
+
+on:
+  schedule:
+    - cron: '0 16 * * *'  # 23:00 WIB (UTC+7)
+  workflow_dispatch:       # bisa trigger manual juga
+
+permissions:
+  contents: write
+
+jobs:
+  daily-til:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Git
+        run: |
+          git config user.name "dimas-renanda"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create daily TIL note
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          YEAR=$(date +%Y)
+          MONTH=$(date +%m)
+          DIR="misc"
+          FILE="${DIR}/${DATE}.md"
+
+          mkdir -p "$DIR"
+
+          if [ ! -f "$FILE" ]; then
+            cat > "$FILE" << EOF
+          # TIL — ${DATE}
+
+          > Auto-generated daily log. Edit to add today's learnings.
+
+          ## 📌 Topics explored today
+
+          - [ ] ...
+
+          ## 🔗 Resources
+
+          - 
+
+          ## 💡 Notes
+
+          <!-- Add your notes here -->
+          EOF
+            echo "Created: $FILE"
+          else
+            echo "Already exists: $FILE"
+            exit 0
+          fi
+
+          git add "$FILE"
+          git commit -m "til: daily note ${DATE}"
+          git push
+
+      - name: Update README with latest notes
+        run: |
+          # Get last 5 TIL files across all dirs
+          FILES=$(find . -name "*.md" ! -name "README.md" | sort -r | head -5)
+          LIST=""
+          for f in $FILES; do
+            DATE=$(basename "$f" .md)
+            DIR=$(dirname "$f" | sed 's|./||')
+            LIST="${LIST}- [${DATE}](${f}) \`${DIR}\`\n"
+          done
+
+          # Update README between markers
+          python3 - <<PYEOF
+          import re
+          with open('README.md', 'r') as f:
+              content = f.read()
+          new_section = "<!-- TIL_LIST_START -->\n${LIST}<!-- TIL_LIST_END -->"
+          content = re.sub(
+              r'<!-- TIL_LIST_START -->.*?<!-- TIL_LIST_END -->',
+              new_section,
+              content,
+              flags=re.DOTALL
+          )
+          with open('README.md', 'w') as f:
+              f.write(content)
+          PYEOF
+
+          git add README.md
+          git diff --staged --quiet || git commit -m "docs: update README with latest TIL notes"
+          git push
