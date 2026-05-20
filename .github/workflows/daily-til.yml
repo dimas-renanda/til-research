@@ -32,21 +32,19 @@ jobs:
 
           if [ ! -f "$FILE" ]; then
             cat > "$FILE" << EOF
-          # TIL — ${DATE}
+          # ${DATE}
 
-          > Auto-generated daily log. Edit to add today's learnings.
+          ## What I worked on
 
-          ## 📌 Topics explored today
+          -
 
-          - [ ] ...
+          ## Notes
 
-          ## 🔗 Resources
+          
 
-          - 
+          ## Links
 
-          ## 💡 Notes
-
-          <!-- Add your notes here -->
+          -
           EOF
             echo "Created: $FILE"
           else
