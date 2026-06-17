@@ -19,11 +19,11 @@ This repo is automatically updated with daily learning notes covering DevOps, ba
 ## 📅 Recent Notes
 
 <!-- TIL_LIST_START -->
+- [2026-06-17](./misc/2026-06-17.md) `misc`
 - [2026-06-16](./misc/2026-06-16.md) `misc`
 - [2026-06-15](./misc/2026-06-15.md) `misc`
 - [2026-06-14](./misc/2026-06-14.md) `misc`
 - [2026-06-13](./misc/2026-06-13.md) `misc`
-- [2026-06-12](./misc/2026-06-12.md) `misc`
 <!-- TIL_LIST_END -->
 
 ---
